@@ -8,10 +8,10 @@
 
 import Foundation
 
-class SwiftyRegex {
+public class Regex {
     let regex: NSRegularExpression
     
-    init?(pattern: String) {
+    public init?(pattern: String) {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             return nil
         }
@@ -29,21 +29,35 @@ class SwiftyRegex {
         
         let matches = regex.matches(in: string, options: [], range: fullRange)
         
-        return matches.map { match in
-            let wholeRange = match.range(at: 0)
-            let wholeMatch = (string as NSString).substring(with: wholeRange)
-            
-            let groups = (1..<match.numberOfRanges).map { idx -> String in
-                let groupRange = match.range(at: idx)
-                return (string as NSString).substring(with: groupRange)
-            }
-            
-            return Match(wholeMatch: wholeMatch, groups: groups)
-        }
+        return matches.map { Match(string: string, match: $0) }
     }
     
     public struct Match {
-        let wholeMatch: String
-        let groups: [String]
+        private let string: String
+        private let match: NSTextCheckingResult
+        
+        init(string: String, match: NSTextCheckingResult) {
+            self.string = string
+            self.match = match
+        }
+        
+        public lazy var wholeMatch: String = {
+            let wholeRange = match.range(at: 0)
+            return (string as NSString).substring(with: wholeRange)
+        }()
+        
+        public lazy var groups: [String] = {
+            return (1..<match.numberOfRanges).map { idx -> String in
+                let groupRange = match.range(at: idx)
+                return (string as NSString).substring(with: groupRange)
+            }
+        }()
+        
+        public func group(named name: String) -> String? {
+            let namedRange = match.range(withName: name)
+            guard namedRange.location != NSNotFound else { return nil }
+            return (string as NSString).substring(with: namedRange)
+        }
     }
 }
+
