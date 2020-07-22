@@ -1,41 +1,41 @@
 import XCTest
-@testable import SwiftyRegex
+@testable import Regex
 
-class SwiftyRegexTests: XCTestCase {
+class RegexTests: XCTestCase {
     
     func testInitialiserReturnsNilForInvalidPattern() {
-        let re = SwiftyRegex(pattern: "[]")
+        let re = Regex(pattern: "[]")
         XCTAssertNil(re)
     }
     
     func testInitialiserReturnsObjectForValidPattern() {
-        let re = SwiftyRegex(pattern: "not [in]valid")
+        let re = Regex(pattern: "not [in]valid")
         XCTAssertNotNil(re)
     }
     
     func testReturnsTrueWhenStringDoesMatchExpression() {
-        let re = SwiftyRegex(pattern: "foo")!
+        let re = Regex(pattern: "foo")!
         
         XCTAssertTrue(re.matches(string: "wibblefoobar"))
     }
     
     func testCapturesWholeMatchWithNoSubGroups() {
-        let re = SwiftyRegex(pattern: "fo+")!
-        let matches: [SwiftyRegex.Match] = re.matches(string: "a commonly used word in coding is foo, apparently")
+        let re = Regex(pattern: "fo+")!
+        var matches: [Regex.Match] = re.matches(string: "a commonly used word in coding is foo, apparently")
         
         XCTAssertEqual(matches.count, 1)
         XCTAssertEqual(matches[0].wholeMatch, "foo")
     }
     
     func testCapturesWholeMatchWithSubGroups() {
-        let matches = matchWithSubGroups()
+        var matches = matchWithSubGroups()
         
         XCTAssertEqual(matches.count, 1)
         XCTAssertEqual(matches[0].wholeMatch, "Resolution: 1920x1080")
     }
     
     func testCapturesSubGroups() {
-        let matches = matchWithSubGroups()
+        var matches = matchWithSubGroups()
         
         XCTAssertEqual(matches[0].groups.count, 2)
         XCTAssertEqual(matches[0].groups[0], "1920")
@@ -43,8 +43,8 @@ class SwiftyRegexTests: XCTestCase {
     }
     
     func testCapturesMultipleMatches() {
-        let re = SwiftyRegex(pattern: "([\\d]+)x([\\d]+)")!
-        let matches: [SwiftyRegex.Match] = re.matches(string: "Some common resolutions are 1920x1080 1280x720 and so on")
+        let re = Regex(pattern: "([\\d]+)x([\\d]+)")!
+        var matches: [Regex.Match] = re.matches(string: "Some common resolutions are 1920x1080 1280x720 and so on")
         
         XCTAssertEqual(matches.count, 2)
         
@@ -57,9 +57,9 @@ class SwiftyRegexTests: XCTestCase {
         XCTAssertEqual(matches[1].groups[1], "720")
     }
     
-    private func matchWithSubGroups() -> [SwiftyRegex.Match] {
-        let re = SwiftyRegex(pattern: "Resolution: ([\\d]+)x([\\d]+)")!
-        let matches: [SwiftyRegex.Match] = re.matches(string: "Some text Resolution: 1920x1080 (HD)")
+    private func matchWithSubGroups() -> [Regex.Match] {
+        let re = Regex(pattern: "Resolution: ([\\d]+)x([\\d]+)")!
+        let matches: [Regex.Match] = re.matches(string: "Some text Resolution: 1920x1080 (HD)")
         return matches
     }
 }
