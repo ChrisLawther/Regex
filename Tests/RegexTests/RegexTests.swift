@@ -21,21 +21,21 @@ class RegexTests: XCTestCase {
     
     func testCapturesWholeMatchWithNoSubGroups() {
         let re = Regex(pattern: "fo+")!
-        var matches: [Regex.Match] = re.matches(string: "a commonly used word in coding is foo, apparently")
+        let matches: [Regex.Match] = re.matches(string: "a commonly used word in coding is foo, apparently")
         
         XCTAssertEqual(matches.count, 1)
         XCTAssertEqual(matches[0].wholeMatch, "foo")
     }
     
     func testCapturesWholeMatchWithSubGroups() {
-        var matches = matchWithSubGroups()
+        let matches = matchWithSubGroups()
         
         XCTAssertEqual(matches.count, 1)
         XCTAssertEqual(matches[0].wholeMatch, "Resolution: 1920x1080")
     }
     
     func testCapturesSubGroups() {
-        var matches = matchWithSubGroups()
+        let matches = matchWithSubGroups()
         
         XCTAssertEqual(matches[0].groups.count, 2)
         XCTAssertEqual(matches[0].groups[0], "1920")
