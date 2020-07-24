@@ -31,27 +31,25 @@ public class Regex {
         
         return matches.map { Match(string: string, match: $0) }
     }
-    
+
     public struct Match {
         private let string: String
         private let match: NSTextCheckingResult
-        
+
+        public let wholeMatch: String
+        public let groups: [String]
+
         init(string: String, match: NSTextCheckingResult) {
             self.string = string
             self.match = match
-        }
-        
-        public lazy var wholeMatch: String = {
             let wholeRange = match.range(at: 0)
-            return (string as NSString).substring(with: wholeRange)
-        }()
-        
-        public lazy var groups: [String] = {
-            return (1..<match.numberOfRanges).map { idx -> String in
+            wholeMatch = (string as NSString).substring(with: wholeRange)
+
+            groups = (1..<match.numberOfRanges).map { idx -> String in
                 let groupRange = match.range(at: idx)
                 return (string as NSString).substring(with: groupRange)
             }
-        }()
+        }
         
         @available(macOS 10.13, *)
         public func group(named name: String) -> String? {
@@ -61,4 +59,3 @@ public class Regex {
         }
     }
 }
-

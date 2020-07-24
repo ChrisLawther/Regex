@@ -44,7 +44,7 @@ class RegexTests: XCTestCase {
     
     func testCapturesMultipleMatches() {
         let re = Regex(pattern: "([\\d]+)x([\\d]+)")!
-        var matches: [Regex.Match] = re.matches(string: "Some common resolutions are 1920x1080 1280x720 and so on")
+        let matches: [Regex.Match] = re.matches(string: "Some common resolutions are 1920x1080 1280x720 and so on")
         
         XCTAssertEqual(matches.count, 2)
         
@@ -55,6 +55,17 @@ class RegexTests: XCTestCase {
         XCTAssertEqual(matches[1].wholeMatch, "1280x720")
         XCTAssertEqual(matches[1].groups[0], "1280")
         XCTAssertEqual(matches[1].groups[1], "720")
+    }
+
+    @available(OSX 10.13, *)
+    func testNamedCaptureGroups() {
+        let re = Regex(pattern: "(?<numbers>\\d+)")!
+        let matches: [Regex.Match] = re.matches(string: "Some common resolutions are 1920x1080 1280x720 and so on")
+
+        XCTAssertEqual(matches.count, 4)
+        for (match, number) in zip(matches, [1920, 1080, 1280, 720]) {
+            XCTAssertEqual(match.group(named: "numbers"), "\(number)")
+        }
     }
     
     private func matchWithSubGroups() -> [Regex.Match] {
