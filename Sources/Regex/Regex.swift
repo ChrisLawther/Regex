@@ -57,5 +57,10 @@ public class Regex {
             guard namedRange.location != NSNotFound else { return nil }
             return (string as NSString).substring(with: namedRange)
         }
+
+        @available(macOS 10.13, *)
+        public subscript(_ name: String) -> String? {
+            return group(named: name)
+        }
     }
 }
