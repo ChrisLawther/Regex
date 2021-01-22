@@ -52,6 +52,7 @@ public class Regex {
         }
         
         @available(macOS 10.13, *)
+        @available(iOS 11.0, *)
         public func group(named name: String) -> String? {
             let namedRange = match.range(withName: name)
             guard namedRange.location != NSNotFound else { return nil }
@@ -59,6 +60,7 @@ public class Regex {
         }
 
         @available(macOS 10.13, *)
+        @available(iOS 11.0, *)
         public subscript(_ name: String) -> String? {
             return group(named: name)
         }
